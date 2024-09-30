@@ -16,13 +16,13 @@ year = now_dt.year
 discord_url = "웹후크URL"
 
 
-# TEST. 디스코드 채널로 메세지 전송 #
+# 디스코드 채널로 메세지 전송 #
 def discord_send_msg(text):
   now = datetime.datetime.now()
   msg = {"content": f"[{now.strftime('%Y-%m-%d %H:%M:%S')}] {str(text)}"}
   requests.post(discord_url, data = msg)
 
-# TEST END
+# 이건 테스트 끝나서 더이상 사용 안함 ㅋㅋ 
 # discord_send_msg("개행문자 테스트")
 
 
@@ -36,21 +36,28 @@ async def everyday_23_01_notice():
   second = datetime.datetime.now().second
 
   # 오후 23시 01분마다 수행 START #
-  if (hour == 23) and (minute == 1) and (second > 0):
+  # if (hour == 23) and (minute == 1) and (second > 0):
+  if (hour == 16) and (minute == 3) and (second > 0):
     # 디스코드 봇에게 전달
     discord_send_msg(f"내일 가능하신 분 손~ 🙋🏻‍♀️🙋🏻‍♂️🙋🏻")
     
     # 1초 sleep하여 중복 전송 방지
     await time.sleep(1)
-  # 오후 23시 01분마다 수행 END #
+    # 종료
+    everyday_23_01_notice.stop()
   else:
     now = datetime.datetime.now()
-    print(f"현재시각: {now.strftime('%Y-%m-%d %H:%M:%S')}] 입니다...")
+    print(f"현재시각: [{now.strftime('%Y-%m-%d %H:%M:%S')}] 입니다...")
+# 오후 23시 01분마다 수행 END #
 
-
+# main() START #
 async def main():
+  # 시작
   everyday_23_01_notice.start()
 
+  while True:
+    await asyncio.sleep(1)
+# main() END #
 
 
 if __name__ == '__main__':
