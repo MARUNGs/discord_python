@@ -1,0 +1,60 @@
+# 웹 후크를 이용한 디스코드 봇 반복메세지 보내기 #
+
+# 반복 작업을 위한 패키지
+from discord.ext import tasks
+# 현재 시간을 받아와 구조체에 넣어주는 용도로 사용할 패키지
+import datetime
+# 중복 전송을 방지하기 위해 사용할 패키지
+import time
+import requests
+import asyncio
+
+# 현재 시간
+now_dt = datetime.datetime.now()
+year = now_dt.year
+
+discord_url = "나의 웹 후크 URL"
+
+
+# 디스코드 채널로 메세지 전송 #
+def discord_send_msg(text):
+  now = datetime.datetime.now()
+  msg = {"content": f"[{now.strftime('%Y-%m-%d %H:%M:%S')}] {str(text)}"}
+  requests.post(discord_url, data = msg)
+
+# 이건 테스트 끝나서 더이상 사용 안함
+# discord_send_msg("개행문자 테스트")
+
+
+
+# ##################################################################################################
+# 본격적으로 만드는 하루한번 반복메세지 보내기 #
+@tasks.loop(seconds=1)
+async def everyday_23_01_notice():
+  hour   = datetime.datetime.now().hour
+  minute = datetime.datetime.now().minute
+  second = datetime.datetime.now().second
+
+  # 오후 23시 01분마다 수행 START #
+  if (hour == 23) and (minute == 1) and (second > 0):
+    # 디스코드 봇에게 전달
+    discord_send_msg(f"내일 가능하신 분 손~ 🙋🏻‍♀️🙋🏻‍♂️🙋🏻")
+    
+    # 1초 sleep하여 중복 전송 방지
+    await time.sleep(1)
+  # 오후 23시 01분마다 수행 END #
+  else:
+    now = datetime.datetime.now()
+    print(f"현재시각: {now.strftime('%Y-%m-%d %H:%M:%S')}] 입니다...")
+
+
+async def main():
+  everyday_23_01_notice.start()
+
+
+
+if __name__ == '__main__':
+  try:
+    asyncio.run(main())
+  except RuntimeError as E:
+    print(f"에러 발견! {E}")
