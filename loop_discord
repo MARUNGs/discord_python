@@ -22,7 +22,7 @@ def discord_send_msg(text):
   msg = {"content": f"[{now.strftime('%Y-%m-%d %H:%M:%S')}] {str(text)}"}
   requests.post(discord_url, data = msg)
 
-# 이건 테스트 끝나서 더이상 사용 안함 ㅋㅋ 
+# 사용안함
 # discord_send_msg("개행문자 테스트")
 
 
